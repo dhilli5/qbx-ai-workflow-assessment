@@ -40,15 +40,6 @@ async function mockLlm(messages) {
     });
   }
 
-  //Needs doc lookup
-  if (/latest report/i.test(text)) {
-    return JSON.stringify({
-      type: "tool_call",
-      tool: "lookupDoc",
-      args: { docId: "RPT-2026-02" }
-    });
-  }
-
   //After tool observation present in messages, produce final
   const hasToolObservation = messages.some((m) =>
     m.role === "assistant" && m.content.includes("TOOL_RESULT:")
@@ -65,6 +56,15 @@ async function mockLlm(messages) {
           body: "Summary generated from latest report."
         }
       }
+    });
+  }
+
+  //Needs doc lookup
+  if (/latest report/i.test(text)) {
+    return JSON.stringify({
+      type: "tool_call",
+      tool: "lookupDoc",
+      args: { docId: "RPT-2026-02" }
     });
   }
 
